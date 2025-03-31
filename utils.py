@@ -104,21 +104,27 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
                         profit_df.at['广告费', profit_sku] / ad_sum) * ad_bd
             profit_df.at['广告费', profit_sku] = round(profit_df.at['广告费', profit_sku], 2)
 
-            ad_ratio = ((profit_df.at['广告费', profit_sku]) / (profit_df.at['总结算额', profit_sku])) * 100
-            ad_ratio = round(ad_ratio, 2)
-            profit_df.at['广告占比%', profit_sku] = ad_ratio
+            # 检查总结算额是否为零
+            summary_settlement = profit_df.at['总结算额', profit_sku]
+            if summary_settlement != 0:
 
-            product_cost = cost_df[profit_sku].sum() / 7.2 * profit_df.at['销量', profit_sku]  # 插入产品成本
-            product_cost = round(product_cost, 2)
-            profit_df.at['产品成本', profit_sku] = -abs(product_cost)
+                ad_ratio = ((profit_df.at['广告费', profit_sku])/ (profit_df.at['总结算额', profit_sku])) * 100
+                ad_ratio = round(ad_ratio, 2)
+                profit_df.at['广告占比%', profit_sku] = ad_ratio
+            else:
+                # 如果总结算额为零，将广告占比设为 0
+                profit_df.at['广告占比%', profit_sku] = 0
 
-            product_cost_ratio = ((profit_df.at['产品成本', profit_sku]) / (profit_df.at['总结算额', profit_sku])) * 100
-            product_cost_ratio = round(product_cost_ratio, 2)
-            profit_df.at['产品成本占比%', profit_sku] = product_cost_ratio
+            # 获取各项占比的值，并处理 NaN
+            platform_cost_ratio = profit_df.at['平台成本占比%', profit_sku]
+            refund_ratio = profit_df.at['退款占比%', profit_sku]
+            ad_ratio = profit_df.at['广告占比%', profit_sku]
 
-            profit_df.at['剩下%', profit_sku] = 100 + profit_df.at['平台成本占比%', profit_sku] + profit_df.at[
-                '退款占比%', profit_sku] + profit_df.at['广告占比%', profit_sku] + profit_df.at[
-                                                    '产品成本占比%', profit_sku]
+            platform_cost_ratio = 0 if pd.isna(platform_cost_ratio) else platform_cost_ratio
+            refund_ratio = 0 if pd.isna(refund_ratio) else refund_ratio
+            ad_ratio = 0 if pd.isna(ad_ratio) else ad_ratio
+
+            profit_df.at['剩下%', profit_sku]=100+ platform_cost_ratio + refund_ratio + ad_ratio
             profit_df.at['剩下%', profit_sku] = round(profit_df.at['剩下%', profit_sku], 2)
 
             profit_df.at['利润', profit_sku] = profit_df.at['总结算额', profit_sku] + profit_df.at['平台成本', profit_sku] + \
@@ -135,7 +141,7 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
     profit_df.at["总结算额","汇总"]=profit_df.loc["总结算额"].iloc[0:lens].sum()
     profit_df.at["平台成本","汇总"]=profit_df.loc["平台成本"].iloc[0:lens].sum()
     profit_df.at["退款","汇总"]=profit_df.loc["退款"].iloc[0:lens].sum()
-    profit_df.at["广告费","汇总"]=profit_df.loc["广告费"].iloc[0:lens].sum()
+    profit_df.at["广告费","汇总"]=ad_sum_df.iloc[:,15].sum()
     profit_df.at["产品成本","汇总"]=profit_df.loc["产品成本"].iloc[0:lens].sum()
     profit_df.at["利润","汇总"]=profit_df.loc["利润"].iloc[0:lens].sum()
     profit_df.at["折扣和税","汇总"]=round(profit_df.loc["折扣和税"].iloc[0:lens].sum(),2)
