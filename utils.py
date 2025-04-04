@@ -15,7 +15,8 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
     cost_df=pd.read_csv("./成本报表.csv",index_col=0)#设置第0列为索引
     #cost_df
 
-    order_df1 = order_df[~order_df['type'].isin(['Liquidations', 'Liquidations Adjustments'])]
+    #order_df1 = order_df[~order_df['type'].isin(['Liquidations', 'Liquidations Adjustments'])]
+    order_df1 = order_df[order_df['type'].isin(['Order', 'Refund'])]
     unique_skus = order_df1['sku'].unique()
     unique_skus = [sku for sku in unique_skus if not pd.isna(sku)]# 过滤掉空值（NaN）
     unique_skus = [str(sku) for sku in unique_skus]
