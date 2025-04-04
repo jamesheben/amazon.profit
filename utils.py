@@ -96,10 +96,14 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
 
     # 处理广告费和其他指标
     ad_sum = profit_df.loc['广告费'].sum()
-    unique_profit_sku = profit_df.columns
-    for profit_sku in unique_profit_sku:  # 遍历广告费空则为0
+    unique_profit_sku = profit_df.columns[:-1]
+    for profit_sku in unique_profit_sku: 
+        product_cost = cost_df[profit_sku].sum()/7.2*profit_df.at['销量', profit_sku]      #插入产品成本
+        product_cost = round(product_cost, 2)
+        profit_df.at['产品成本', profit_sku] = -abs(product_cost)
+        
         if pd.isna(profit_df.at['广告费', profit_sku]):
-            profit_df.at['广告费', profit_sku] = 0
+            profit_df.at['广告费', profit_sku] = 0         # 遍历广告费空则为0
         if not pd.isna(profit_df.at['总结算额', profit_sku]):  # 不是空值才计算，空值不计算跳过
             profit_df.at['广告费', profit_sku] = profit_df.at['广告费', profit_sku] - (
                         profit_df.at['广告费', profit_sku] / ad_sum) * ad_bd
@@ -112,6 +116,10 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
                 ad_ratio = ((profit_df.at['广告费', profit_sku])/ (profit_df.at['总结算额', profit_sku])) * 100
                 ad_ratio = round(ad_ratio, 2)
                 profit_df.at['广告占比%', profit_sku] = ad_ratio
+
+                product_ratio = ((profit_df.at['产品成本', profit_sku])/ (profit_df.at['总结算额', profit_sku])) * 100
+                product_ratio = round(product_ratio, 2)
+                profit_df.at['产品成本占比%', profit_sku] = product_ratio
             else:
                 # 如果总结算额为零，将广告占比设为 0
                 profit_df.at['广告占比%', profit_sku] = 0
@@ -120,12 +128,15 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
             platform_cost_ratio = profit_df.at['平台成本占比%', profit_sku]
             refund_ratio = profit_df.at['退款占比%', profit_sku]
             ad_ratio = profit_df.at['广告占比%', profit_sku]
-
+            product_ratio = profit_df.at['产品成本占比%', profit_sku]
+           
+            
             platform_cost_ratio = 0 if pd.isna(platform_cost_ratio) else platform_cost_ratio
             refund_ratio = 0 if pd.isna(refund_ratio) else refund_ratio
             ad_ratio = 0 if pd.isna(ad_ratio) else ad_ratio
-
-            profit_df.at['剩下%', profit_sku]=100+ platform_cost_ratio + refund_ratio + ad_ratio
+            product_ratio = 0 if pd.isna(product_ratio) else product_ratio
+            
+            profit_df.at['剩下%', profit_sku]=100+ platform_cost_ratio + refund_ratio + ad_ratio + product_ratio
             profit_df.at['剩下%', profit_sku] = round(profit_df.at['剩下%', profit_sku], 2)
 
             profit_df.at['利润', profit_sku] = profit_df.at['总结算额', profit_sku] + profit_df.at['平台成本', profit_sku] + \
