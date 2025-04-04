@@ -147,13 +147,26 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
             profit_df.at['最终利润', profit_sku] = round(profit_df.at['最终利润', profit_sku], 2)
     if abs(ad_sum_df.iloc[:, 15].sum() + profit_df.loc['广告费'].sum()) > 1:
         profit_df.loc["请注意"] = "产品广告第二页没下载完整，请选择单页50条重新下载"
-        # profit_df
+
+    filtered_order = order_df[order_df['type'].isin(["Order"])]
+
+    quantity_sum = filtered_order['quantity'].sum()
+    profit_df.loc['销量', "汇总"] = int(quantity_sum)
+    
+    product_sales_sum = filtered_order['product sales'].sum()
+    profit_df.at['总结算额', "汇总"] = round(product_sales_sum,2)
+    
+    platform_cost_sum = filtered_order[['selling fees', 'fba fees']].sum().sum()
+    profit_df.at['平台成本', "汇总"] = round(platform_cost_sum,2)
+    
+    filtered_refund = order_df[order_df['type'].isin(["Refund"])]
+    refund_total_sum = filtered_refund['total'].sum()
+    profit_df.at['退款', "汇总"] = round(refund_total_sum,2)
+    
+    profit_df.at["广告费","汇总"]=ad_sum_df.iloc[:,15].sum().round(2)
+
+    
     lens=len(profit_df.columns)-1
-    profit_df.at["销量","汇总"]=profit_df.loc["销量"].iloc[0:lens].sum()
-    profit_df.at["总结算额","汇总"]=profit_df.loc["总结算额"].iloc[0:lens].sum()
-    profit_df.at["平台成本","汇总"]=profit_df.loc["平台成本"].iloc[0:lens].sum()
-    profit_df.at["退款","汇总"]=profit_df.loc["退款"].iloc[0:lens].sum()
-    profit_df.at["广告费","汇总"]=ad_sum_df.iloc[:,15].sum()
     profit_df.at["产品成本","汇总"]=profit_df.loc["产品成本"].iloc[0:lens].sum()
     profit_df.at["利润","汇总"]=profit_df.loc["利润"].iloc[0:lens].sum()
     profit_df.at["折扣和税","汇总"]=round(profit_df.loc["折扣和税"].iloc[0:lens].sum(),2)
@@ -183,6 +196,5 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
             else:
             # 处理缺失值
                 profit_df.at[row, sku] = pd.NA
-    #profit_df
 
     return profit_df
