@@ -177,8 +177,10 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
     profit_df.at["产品成本占比%", "汇总"] = round((profit_df.at["产品成本", "汇总"] / profit_df.at["总结算额", "汇总"]) * 100,2)
     profit_df.at["剩下%", "汇总"] = 100 + profit_df.at["平台成本占比%", "汇总"] + profit_df.at["退款占比%", "汇总"] + \
                                     profit_df.at["广告占比%", "汇总"] + profit_df.at["产品成本占比%", "汇总"]
-    profit_df.at["盈利","汇总"] =profit_df["汇总"].iloc[13:20].sum().round(2)
+    profit_df.at["盈利","汇总"] =profit_df["汇总"].iloc[13] + profit_df["汇总"].iloc[15:20].sum()
+    profit_df.at["盈利","汇总"] = round(profit_df.at["盈利","汇总"],2)
     #profit_df
+    
     lens = len(profit_df.columns)
     start_row = profit_df.index.tolist().index('总结算额')
     end_row = profit_df.index.tolist().index('其他') + 1
