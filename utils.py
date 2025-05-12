@@ -73,8 +73,8 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
         ad_spend = filtered_ad_df.iloc[9].sum() # 对 "Spend(USD)" 列求和,只有一行，不能用[:,9],series不是Dataframe
         # 检查 ad_sku 是否存在于 profit_df 的列中
         if ad_sku not in profit_df.columns:
-            # 如果不存在，新增一列并初始化为 NaN
-            profit_df[ad_sku] = pd.NA
+            # 如果不存在，新增一列并初始化为 0.00
+            profit_df[ad_sku] = 0.00
         # 将广告求和结果赋值给 profit_df 中索引为 "广告费"，列名为 ad_sku 的位置
         profit_df.at['广告费', ad_sku] = -abs(ad_spend) # 将广告求和结果赋值给 profit_df 中索引为 "广告费"，列名为 "ad_sku" 的位置
 
