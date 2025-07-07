@@ -3,8 +3,8 @@ from utils import generate_profit_report
 st.title("利润报表生成器")
 # 上传文件
 order_file = st.file_uploader("上传订单报表 (CSV 文件)", type=["csv"])
-ad_file = st.file_uploader("上传广告报表 (CSV 文件)", type=["csv"])
-ad_sum_file = st.file_uploader("上传广告总报表 (CSV 文件)", type=["csv"])
+ad_file = st.file_uploader("上传产品广告报表 (CSV 文件)", type=["csv"])
+ad_sum_file = st.file_uploader("上传总广告报表 (CSV 文件)", type=["csv"])
 if order_file and ad_file and ad_sum_file:
     if st.button("生成利润报表"):
         try:
