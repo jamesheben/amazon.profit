@@ -163,7 +163,7 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
     refund_total_sum = filtered_refund['total'].sum()
     profit_df.at['退款', "汇总"] = round(refund_total_sum,2)
     
-    profit_df.at["广告费","汇总"]=ad_sum_df.iloc[:,15].sum().round(2)
+    profit_df.at["广告费","汇总"]=-ad_sum_df.iloc[:,15].sum().round(2)
 
     
     lens=len(profit_df.columns)-1
