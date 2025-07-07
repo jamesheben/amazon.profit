@@ -168,15 +168,18 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
     
     lens=len(profit_df.columns)-1
     profit_df.at["产品成本","汇总"]=profit_df.loc["产品成本"].iloc[0:lens].sum()
-    profit_df.at["利润","汇总"]=profit_df.loc["利润"].iloc[0:lens].sum()
+    # profit_df.at["利润","汇总"]=profit_df.loc["利润"].iloc[0:lens].sum()
     profit_df.at["折扣和税","汇总"]=round(profit_df.loc["折扣和税"].iloc[0:lens].sum(),2)
-    profit_df.at["最终利润","汇总"]=profit_df.loc["最终利润"].iloc[0:lens].sum()
+    # profit_df.at["最终利润","汇总"]=profit_df.loc["最终利润"].iloc[0:lens].sum()
     profit_df.at["平台成本占比%","汇总"]=round((profit_df.at["平台成本","汇总"]/profit_df.at["总结算额","汇总"])*100,2)
     profit_df.at["退款占比%","汇总"]=round((profit_df.at["退款","汇总"]/profit_df.at["总结算额","汇总"])*100,2)
     profit_df.at["广告占比%","汇总"]=round((profit_df.at["广告费","汇总"]/profit_df.at["总结算额","汇总"])*100,2)
     profit_df.at["产品成本占比%", "汇总"] = round((profit_df.at["产品成本", "汇总"] / profit_df.at["总结算额", "汇总"]) * 100,2)
     profit_df.at["剩下%", "汇总"] = 100 + profit_df.at["平台成本占比%", "汇总"] + profit_df.at["退款占比%", "汇总"] + \
                                     profit_df.at["广告占比%", "汇总"] + profit_df.at["产品成本占比%", "汇总"]
+    profit_df.at["利润","汇总"]=round(profit_df.at["剩下%", "汇总"]/100*profit_df.at['总结算额', "汇总"])
+    profit_df.at["最终利润","汇总"]=profit_df.at["利润","汇总"]+profit_df.at["折扣和税","汇总"]
+    
     profit_df.at["盈利","汇总"] =profit_df["汇总"].iloc[13] + profit_df["汇总"].iloc[15:20].sum()
     profit_df.at["盈利","汇总"] = round(profit_df.at["盈利","汇总"],2)
     #profit_df
