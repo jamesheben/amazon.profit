@@ -150,7 +150,7 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
             profit_df.at['利润', profit_sku] = round(profit_df.at['利润', profit_sku], 2)
             profit_df.at['最终利润', profit_sku] = profit_df.at['利润', profit_sku] + profit_df.at['折扣和税', profit_sku]
             profit_df.at['最终利润', profit_sku] = round(profit_df.at['最终利润', profit_sku], 2)
-    if abs(ad_sum_df.iloc[:, 15].sum() + profit_df.loc['广告费'].sum()) > 1:
+    if abs(ad_sum_df.iloc[:, 19].sum() + profit_df.loc['广告费'].sum()) > 1:
         profit_df.loc["请注意"] = "产品广告第二页没下载完整，请选择单页50条重新下载"
 
     filtered_order = order_df[order_df['type'].isin(["Order"])]
@@ -208,6 +208,7 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
                 profit_df.at[row, sku] = pd.NA
 
     return profit_df
+
 
 
 
