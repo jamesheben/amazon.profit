@@ -11,7 +11,8 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
     # 去除`Spend`列中的`$`符号，并转换为数值类型
     ad_sum_df['Spend'] = pd.to_numeric(ad_sum_df['Spend'].str.replace('$', ''))
     
-    ad_bd=ad_sum_df.iloc[:,19].sum()-ad_df.iloc[:,9].sum()   #相减得到品牌广告费
+    # ad_bd=ad_sum_df.iloc[:,19].sum()-ad_df.iloc[:,9].sum()   #相减得到品牌广告费
+    ad_bd=ad_sum_df['Spend'].sum()-ad_df.iloc[:,9].sum()
     ad_bd=round(ad_bd,2)
     #ad_sum_df
     profit_df=pd.read_csv("./利润报表.csv",index_col=0)#设置第0列为索引
@@ -207,6 +208,7 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
                 profit_df.at[row, sku] = pd.NA
 
     return profit_df
+
 
 
 
