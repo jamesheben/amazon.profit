@@ -10,8 +10,7 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
     
     # 去除`Spend`列中的`$`符号，并转换为数值类型
     ad_sum_df['Spend'] = pd.to_numeric(ad_sum_df['Spend'].str.replace('$', '', regex=False), errors='coerce')
-    
-    # ad_bd=ad_sum_df.iloc[:,19].sum()-ad_df.iloc[:,9].sum()   #相减得到品牌广告费
+    #相减得到品牌广告费
     ad_bd=ad_sum_df['Spend'].sum()-ad_df['Spend(USD)'].sum()
     ad_bd=round(ad_bd,2)
     #ad_sum_df
@@ -150,7 +149,7 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
             profit_df.at['利润', profit_sku] = round(profit_df.at['利润', profit_sku], 2)
             profit_df.at['最终利润', profit_sku] = profit_df.at['利润', profit_sku] + profit_df.at['折扣和税', profit_sku]
             profit_df.at['最终利润', profit_sku] = round(profit_df.at['最终利润', profit_sku], 2)
-    if abs(ad_sum_df.iloc[:, 19].sum() + profit_df.loc['广告费'].sum()) > 1:
+    if abs(ad_sum_df['Spend'].sum() + profit_df.loc['广告费'].sum()) > 1:
         profit_df.loc["请注意"] = "产品广告第二页没下载完整，请选择单页50条重新下载"
 
     filtered_order = order_df[order_df['type'].isin(["Order"])]
@@ -208,6 +207,7 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
                 profit_df.at[row, sku] = pd.NA
 
     return profit_df
+
 
 
 
