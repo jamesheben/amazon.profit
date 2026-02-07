@@ -7,6 +7,7 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
     ad_df = ad_df[ad_df['Spend(USD)'] > 0]                       # 排除 Spend(USD) 列中小于等于 0 的行
     #ad_df
     ad_sum_df=pd.read_csv(ad_sum_file,index_col=0)
+    ad_sum_df.rename(columns={'Total cost': 'Spend'}, inplace=True)  # 将列名从 'Total cost' 改为 'Spend'
     
     # 去除`Spend`列中的`$`符号，并转换为数值类型
     ad_sum_df['Spend'] = pd.to_numeric(ad_sum_df['Spend'].str.replace('$', '', regex=False), errors='coerce')
@@ -207,6 +208,7 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
                 profit_df.at[row, sku] = pd.NA
 
     return profit_df
+
 
 
 
