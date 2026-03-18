@@ -1,6 +1,6 @@
 import pandas as pd
 def generate_profit_report(order_file, ad_file,ad_sum_file):
-    order_df=pd.read_csv(order_file,header=7)#表头是第7行
+    order_df=pd.read_csv(order_file,header=9)#表头是第9行
     #order_df
     ad_df=pd.read_csv(ad_file,index_col=0)#设置第0列为索引
     ad_df.index = ad_df.index.str.split('-', n=1).str.get(1)# 使用字符串分割方法处理 索引列"-"后一列
