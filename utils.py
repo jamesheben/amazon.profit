@@ -1,6 +1,6 @@
 import pandas as pd
 def generate_profit_report(order_file, ad_file,ad_sum_file):
-    order_df=pd.read_csv(order_file,header=9,encoding="gb18030",encoding_errors="replace")#表头是第9行
+    order_df=pd.read_csv(order_file,header=9)#表头是第9行
     #order_df
     ad_df=pd.read_csv(ad_file,index_col=0)#设置第0列为索引
     ad_df.index = ad_df.index.str.split('-', n=1).str.get(1)# 使用字符串分割方法处理 索引列"-"后一列
@@ -15,9 +15,9 @@ def generate_profit_report(order_file, ad_file,ad_sum_file):
     ad_bd=ad_sum_df['Spend'].sum()-ad_df['Spend(USD)'].sum()
     ad_bd=round(ad_bd,2)
     #ad_sum_df
-    profit_df=pd.read_csv("./利润报表.csv",index_col=0,encoding="gb18030")#设置第0列为索引
+    profit_df=pd.read_csv("./利润报表.csv",index_col=0)#设置第0列为索引
     #profit_df
-    cost_df=pd.read_csv("./成本报表.csv",index_col=0,encoding="gb18030")#设置第0列为索引
+    cost_df=pd.read_csv("./成本报表.csv",index_col=0)#设置第0列为索引
     #cost_df
 
     #order_df1 = order_df[~order_df['type'].isin(['Liquidations', 'Liquidations Adjustments'])]
