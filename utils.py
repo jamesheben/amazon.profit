@@ -1,12 +1,12 @@
 import pandas as pd
 def generate_profit_report(order_file, ad_file,ad_sum_file):
-    order_df=pd.read_csv(order_file,header=9,encoding="gb18030", errors="replace")#表头是第9行
+    order_df=pd.read_csv(order_file,header=9,encoding="gb18030",encoding_errors="replace")#表头是第9行
     #order_df
     ad_df=pd.read_csv(ad_file,index_col=0)#设置第0列为索引
     ad_df.index = ad_df.index.str.split('-', n=1).str.get(1)# 使用字符串分割方法处理 索引列"-"后一列
     ad_df = ad_df[ad_df['Spend(USD)'] > 0]                       # 排除 Spend(USD) 列中小于等于 0 的行
     #ad_df
-    ad_sum_df=pd.read_csv(ad_sum_file,index_col=0,encoding="gb18030")
+    ad_sum_df=pd.read_csv(ad_sum_file,index_col=0)
     ad_sum_df.rename(columns={'Total cost': 'Spend'}, inplace=True)  # 将列名从 'Total cost' 改为 'Spend'
     
     # 去除`Spend`列中的`$`符号，并转换为数值类型
